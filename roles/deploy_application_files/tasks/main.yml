@@ -1,0 +1,23 @@
+---
+- name: Create application directory
+  file:
+    path: "{{ app_directory }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Copy Node.js application files
+  copy:
+    src: files/app.js
+    dest: "{{ app_directory }}/app.js"
+    owner: www-data
+    group: www-data
+    mode: '0755'
+    notify: Restart PM2
+
+- name: Install npm dependencies
+  npm:
+    path: "{{ app_directory }}"
+    state: present
+  notify: Restart PM2

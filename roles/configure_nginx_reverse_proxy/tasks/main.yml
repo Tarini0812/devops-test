@@ -1,0 +1,33 @@
+---
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Copy Nginx configuration file with dynamic domain
+  template:
+    src: files/nginx_config.j2
+    dest: "{{ nginx_site_dest }}"
+    mode: '0644'
+  notify:
+    - Test Nginx config
+    - Restart Nginx
+
+- name: Create a symbolic link for the site in sites-enabled
+  command: ln -s {{ nginx_site_dest }} {{ nginx_enabled_dest }}
+  args:
+    creates: "{{ nginx_enabled_dest }}"
+  notify: Restart Nginx
+
+- name: Test Nginx configuration
+  command: nginx -t
+  register: nginx_test
+  failed_when: "'test failed' in nginx_test.stderr"
+  changed_when: false
+
+- name: Restart Nginx if config test passes
+  service:
+    name: nginx
+    state: restarted
+  when: nginx_test.rc == 0

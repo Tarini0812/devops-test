@@ -1,0 +1,16 @@
+---
+- name: Deploy Node.js Application
+  hosts: web_servers
+  become: yes
+  vars:
+    app_directory: "/var/www/myapp"
+    app_port: "3000"
+    nginx_domain: "mydomain.com" 
+    nginx_site_dest: "/etc/nginx/sites-available/myapp"
+    nginx_enabled_dest: "/etc/nginx/sites-enabled/myapp"
+
+  roles:
+    - install_nodejs
+    - deploy_application_files
+    - configure_pm2
+    - configure_nginx_reverse_proxy

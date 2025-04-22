@@ -1,0 +1,25 @@
+---
+- name: Install PM2 globally
+  npm:
+    name: pm2
+    global: yes
+    state: present
+
+- name: Start the application using PM2
+  command: pm2 start {{ app_directory }}/app.js --name myapp
+  register: pm2_start
+  ignore_errors: yes  
+
+- name: Set PM2 to start on boot
+  command: pm2 startup systemd --no-pager
+  when: pm2_start.changed
+
+- name: Save PM2 process list
+  command: pm2 save
+  when: pm2_start.changed
+
+- name: Ensure PM2 is running
+  service:
+    name: pm2
+    state: started
+    enabled: yes

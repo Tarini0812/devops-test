@@ -1,1 +1,1 @@
-# devops-test
+ansible-playbook -i inventory.ini deploy_nodejs_app.yml
