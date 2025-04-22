@@ -7,7 +7,7 @@
 
 - name: Copy Nginx configuration file with dynamic domain
   template:
-    src: files/nginx_config.j2
+    src: nginx_config.j2
     dest: "{{ nginx_site_dest }}"
     mode: '0644'
   notify:

@@ -9,7 +9,7 @@
 
 - name: Copy Node.js application files
   copy:
-    src: files/app.js
+    src: app.js
     dest: "{{ app_directory }}/app.js"
     owner: www-data
     group: www-data
